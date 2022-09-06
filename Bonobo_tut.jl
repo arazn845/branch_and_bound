@@ -24,3 +24,39 @@ bnb_model = BB.initialize(;
     root = m,        #is the model itself
     sense = objective_sense(m) == MOI.MAX_SENSE ? :Max : :Min # whether it's a minimization or maximization problem
 )
+
+##########################################################
+
+function BB.evaluate_node!(tree::BnBTree{MIPNode, JuMP.Model}, node::MIPNode)
+    m = tree.root
+    vids = MOI.get(m ,MOI.ListOfVariableIndices())
+    vars = VariableRef.(m, vids)
+    JuMP.set_lower_bound.(vars, node.lbs)
+    JuMP.set_upper_bound.(vars, node.ubs)
+
+    optimize!(m)
+    status = termination_status(m)
+    node.status = status
+    if status != MOI.OPTIMAL
+        return NaN,NaN
+    end
+
+    obj_val = objective_value(m)
+    if all(BB.is_approx_feasible.(tree, value.(vars)))
+        node.ub = obj_val
+        return obj_val, obj_val
+    end
+    return obj_val, NaN
+end
+
+function BB.get_relaxed_values(tree::BnBTree{MIPNode, JuMP.Model}, node)
+    vids = MOI.get(tree.root ,MOI.ListOfVariableIndices())
+    vars = VariableRef.(tree.root, vids)
+    return JuMP.value.(vars)
+end
+
+function BB.get_branching_indices(model::JuMP.Model)
+    # every variable should be discrete
+    vis = MOI.get(model, MOI.ListOfVariableIndices())
+    return 1:length(vis)
+end
