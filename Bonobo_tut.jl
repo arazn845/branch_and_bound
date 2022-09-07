@@ -23,6 +23,7 @@ end
 ###It returns the created BnBTree object which I'll call tree.
 
 bnb_model = BB.initialize(; 
+    branch_strategy = BB.MOST_INFEASIBLE, # branch strategy
     Node = MIPNode,  # stores information to evaluate the subproblems
     root = m,        #is the model itself
     sense = objective_sense(m) == MOI.MAX_SENSE ? :Max : :Min # whether it's a minimization or maximization problem
