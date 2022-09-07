@@ -17,6 +17,15 @@ mutable struct MIPNode <: AbstractNode
     ubs :: Vector{Float64} #upper bound for each variable
     status :: MOI.TerminationStatusCode #can be OPTIMAL or INFEASIBLE 
 end
+
+#########################################################
+function BB.get_branching_indices(model::JuMP.Model)
+    # every variable should be discrete
+    vis = MOI.get(model, MOI.ListOfVariableIndices())
+    return 1:length(vis)
+end
+
+
 ##########################################################
 #initialize (Bonobo.initalize(; kwargs...))
 ###For initializing the BnBTree structure itself with the model information and setting options like the traverse and branch strategy.
