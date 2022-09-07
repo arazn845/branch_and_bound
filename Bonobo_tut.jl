@@ -12,7 +12,7 @@ set_optimizer_attribute(m, "logLevel", 0)
 const BB = Bonobo
 ##########################################################
 mutable struct MIPNode <: AbstractNode
-    std :: BnBNode #has to have the field named std with type BnBNode as Bonobo itself also stores some information in each node
+    std :: BnBNodeInfo #has to have the field named std with type BnBNode as Bonobo itself also stores some information in each node
     lbs :: Vector{Float64} #lower bound for each variable
     ubs :: Vector{Float64} #upper bound for each variable
     status :: MOI.TerminationStatusCode #can be OPTIMAL or INFEASIBLE 
