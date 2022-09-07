@@ -18,6 +18,9 @@ mutable struct MIPNode <: AbstractNode
     status :: MOI.TerminationStatusCode #can be OPTIMAL or INFEASIBLE 
 end
 ##########################################################
+#initialize (Bonobo.initalize(; kwargs...))
+###For initializing the BnBTree structure itself with the model information and setting options like the traverse and branch strategy.
+###It returns the created BnBTree object which I'll call tree.
 
 bnb_model = BB.initialize(; 
     Node = MIPNode,  # stores information to evaluate the subproblems
