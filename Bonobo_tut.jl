@@ -1,3 +1,4 @@
+using JuMP, Cbc, Bonobo
 #problem description
 
 m = Model(Cbc.Optimizer)
